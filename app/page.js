@@ -12,7 +12,7 @@ export default function Home() {
 
   // Konfigurasi Deeplink
   const config = {
-    appScheme: 'mdnowapp://home?slug=test-geoblock-whitelist-indonesia-only',
+    appScheme: 'mdnowapp://home?event=147',
     androidPackage: 'com.mdcorp.mdnow.dev',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.mdcorp.mdnow',
     appStoreUrl: 'https://apps.apple.com/id/app/id6749968785'
@@ -39,7 +39,7 @@ export default function Home() {
     const autoOpenApp = () => {
       if (currentDevice === 'Android') {
         setStatus('Otomatis membuka via Android Intent...');
-        const intentUrl = `intent://home?slug=test-geoblock-whitelist-indonesia-only#Intent;scheme=mdnowapp;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
+        const intentUrl = `intent://home?event=147#Intent;scheme=mdnowapp;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
         window.location.href = intentUrl;
       } 
       else if (currentDevice === 'iOS') {
