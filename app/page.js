@@ -77,14 +77,14 @@ export default function Home() {
     setTimeout(() => {
       autoOpenApp();
       hasAttemptedOpen.current = true;
-    }, 500);
+    }, 1000);
 
   }, []);
 
   // Fungsi manual untuk jaga-jaga jika pop-up terblokir browser
   const handleManualRetry = () => {
     if (device === 'Android') {
-      const intentUrl = `intent://home?slug=test-geoblock-whitelist-indonesia-only#Intent;scheme=mdnowapp;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
+      const intentUrl = `intent://home?event=147#Intent;scheme=mdnowapp;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
       window.location.href = intentUrl;
     } else if (device === 'iOS') {
       window.location.href = config.appScheme;
