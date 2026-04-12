@@ -10,12 +10,14 @@ export default function Home() {
   // (terutama saat development dengan React Strict Mode)
   const hasAttemptedOpen = useRef(false);
 
-  // Konfigurasi Deeplink
+  // Konfigurasi Deeplink & Website
   const config = {
     appScheme: 'mdnowapp://home?event=147',
     androidPackage: 'com.mdcorp.mdnow.dev',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.mdcorp.mdnow',
-    appStoreUrl: 'https://apps.apple.com/id/app/id6749968785'
+    appStoreUrl: 'https://apps.apple.com/id/app/id6749968785',
+    // Tambahkan URL website Anda di sini
+    webUrl: 'https://md.now' 
   };
 
   // Effect ini berjalan otomatis satu kali saat halaman dimuat
@@ -38,9 +40,15 @@ export default function Home() {
     // 2. Fungsi untuk membuka app secara otomatis
     const autoOpenApp = () => {
       if (currentDevice === 'Android') {
-        setStatus('Otomatis membuka via Android Intent...');
-        const intentUrl = `intent://home?event=147#Intent;scheme=mdnowapp;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
-        window.location.href = intentUrl;
+        setStatus('Mencoba buka otomatis (tanpa fallback)...');
+        // Untuk auto-open, kita HAPUS fallback Play Store. 
+        // Kenapa? Agar jika diblokir oleh Chrome (karena tidak ada klik), 
+        // user tidak tiba-tiba terlempar ke Play Store, melainkan tetap di web.
+        const intentUrlAuto = `intent://home?event=147#Intent;scheme=mdnowapp;package=${config.androidPackage};end`;
+        window.location.href = intentUrlAuto;
+        
+        // Ubah tulisan tombol menjadi call-to-action utama setelah gagal auto
+        setTimeout(() => setStatus('Auto-redirect diblokir browser. Silakan klik tombol di bawah.'), 1000);
       } 
       else if (currentDevice === 'iOS') {
         setStatus('Otomatis membuka via URL Scheme (iOS)...');
@@ -69,7 +77,9 @@ export default function Home() {
         setTimeout(() => document.removeEventListener('visibilitychange', visibilityListener), 3000);
       } 
       else {
-        setStatus('Mendeteksi Desktop, redirect dihentikan.');
+        // Jika Desktop, langsung arahkan ke Website
+        setStatus('Mendeteksi Desktop, mengarahkan ke website...');
+        window.location.href = config.webUrl;
       }
     };
 
@@ -78,18 +88,22 @@ export default function Home() {
       autoOpenApp();
       hasAttemptedOpen.current = true;
     }, 500);
+    
+  }, []); // Penutup useEffect yang sebelumnya hilang
 
-  }, []);
-
-  // Fungsi manual untuk jaga-jaga jika pop-up terblokir browser
+  // Fungsi manual (Dijalankan DENGAN klik pengguna)
   const handleManualRetry = () => {
     if (device === 'Android') {
-      const intentUrl = `intent://home?event=147#Intent;scheme=mdnowapp;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
-      window.location.href = intentUrl;
+      setStatus('Membuka via klik (dengan fallback Play Store)...');
+      // Karena ini di-klik pengguna, Chrome akan mengizinkan.
+      // Kita panggil Intent LENGKAP dengan fallback Play Store.
+      const intentUrlManual = `intent://home?event=147#Intent;scheme=mdnowapp;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
+      window.location.href = intentUrlManual;
     } else if (device === 'iOS') {
       window.location.href = config.appScheme;
     } else {
-      alert('Anda menggunakan desktop.');
+      // Tombol manual untuk desktop juga mengarahkan ke website
+      window.location.href = config.webUrl;
     }
   };
 
@@ -120,7 +134,7 @@ export default function Home() {
               Membuka Aplikasi...
             </h1>
             <p className="text-gray-500 mb-6 leading-relaxed">
-              Tunggu sebentar, kami sedang mengarahkan Anda ke aplikasi MDNow.
+              Tunggu sebentar, kami sedang mengarahkan Anda ke tujuan yang tepat.
             </p>
 
             <div className="w-full flex justify-between items-center bg-gray-50 px-4 py-3 rounded-xl mb-6 border border-gray-100">
@@ -130,12 +144,11 @@ export default function Home() {
               </span>
             </div>
 
-            {/* Tombol manual disembunyikan kecuali jika terjadi kegagalan atau delay */}
             <button 
               onClick={handleManualRetry}
-              className="w-full bg-white border-2 border-blue-600 hover:bg-blue-50 text-blue-600 font-semibold py-3 px-6 rounded-xl transition-all duration-200"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 shadow-md shadow-blue-200 mt-2"
             >
-              Klik disini jika aplikasi tidak terbuka
+              Buka Aplikasi MDNow
             </button>
             
           </div>
