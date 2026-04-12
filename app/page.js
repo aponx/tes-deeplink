@@ -21,8 +21,8 @@ export default function Home() {
 
   // Konfigurasi Deeplink MDNow
   const config = {
-    appScheme: 'mdnow://home',
-    androidPackage: 'com.mdcorp.mdnow',
+    appScheme: 'mdnowapp://home',
+    androidPackage: 'com.mdcorp.mdnow.dev',
     playStoreUrl: 'https://play.google.com/store/apps/details?id=com.mdcorp.mdnow',
     appStoreUrl: 'https://apps.apple.com/id/app/id6749968785'
   };
@@ -30,7 +30,7 @@ export default function Home() {
   const handleSmartOpenApp = () => {
     if (device === 'Android') {
       setStatus('Membuka via Android Intent...');
-      const intentUrl = `intent://home#Intent;scheme=mdnow;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
+      const intentUrl = `intent://home#Intent;scheme=mdnowapp;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
       window.location.href = intentUrl;
     } 
     else if (device === 'iOS') {
