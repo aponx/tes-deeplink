@@ -12,9 +12,9 @@ export default function Home() {
 
   // Konfigurasi Deeplink & Website
   const config = {
-    appScheme: 'mdnowapp://home?event=147',
-    androidPackage: 'com.mdcorp.mdnow.dev',
-    playStoreUrl: 'https://play.google.com/store/apps/details?id=com.mdcorp.mdnow',
+    appScheme: 'https://stg-aws.md.now',
+    androidPackage: 'com.mdcorp.mdnow.stg',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=com.mdcorp.mdnow.stg',
     appStoreUrl: 'https://apps.apple.com/id/app/id6749968785',
     // Tambahkan URL website Anda di sini
     webUrl: 'https://md.now' 
@@ -44,7 +44,7 @@ export default function Home() {
         // Untuk auto-open, kita HAPUS fallback Play Store. 
         // Kenapa? Agar jika diblokir oleh Chrome (karena tidak ada klik), 
         // user tidak tiba-tiba terlempar ke Play Store, melainkan tetap di web.
-        const intentUrlAuto = `intent://home?event=147#Intent;scheme=mdnowapp;package=${config.androidPackage};end`;
+        const intentUrlAuto = `intent://stg-aws.md.now#Intent;scheme=https;package=${config.androidPackage};end`;
         window.location.href = intentUrlAuto;
         
         // Ubah tulisan tombol menjadi call-to-action utama setelah gagal auto
@@ -97,7 +97,7 @@ export default function Home() {
       setStatus('Membuka via klik (dengan fallback Play Store)...');
       // Karena ini di-klik pengguna, Chrome akan mengizinkan.
       // Kita panggil Intent LENGKAP dengan fallback Play Store.
-      const intentUrlManual = `intent://home?event=147#Intent;scheme=mdnowapp;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
+      const intentUrlManual = `intent://stg-aws.md.now#Intent;scheme=https;package=${config.androidPackage};S.browser_fallback_url=${encodeURIComponent(config.playStoreUrl)};end`;
       window.location.href = intentUrlManual;
     } else if (device === 'iOS') {
       window.location.href = config.appScheme;
